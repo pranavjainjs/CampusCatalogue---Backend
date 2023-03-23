@@ -8,7 +8,7 @@ const OrderSchema = new Schema({
 export const Order = new model("Order", OrderSchema);
 
 const ItemSchema = new Schema({
-  name: { type: Stringm, required: true },
+  name: { type: String, required: true },
   price: { type: Number, required: true },
   rating: { type: Number, required: true },
   shopId: { type: Schema.Types.ObjectId, ref: "Shop" },
