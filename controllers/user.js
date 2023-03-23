@@ -1,33 +1,35 @@
-import { sign } from 'jsonwebtoken';
-import User, { isThisEmailInUse, findOne, findByIdAndUpdate } from '../models/user';
+const jwt = require('jsonwebtoken');
+const Customer = require('../models/customer_model');
 
 
-export async function createUser(req, res) {
-  const { fullname, email, password } = req.body;
-  const isNewUser = await isThisEmailInUse(email);
+exports.createUser = async (req, res) => {
+  const { name,roll_number,hostel,phone_number,email } = req.body;
+  const isNewUser = await Customer.isThisPhonenoInUse(phone_number);
   if (!isNewUser)
     return res.json({
       success: false,
       message: 'This email is already in use, try sign-in',
     });
-  const user = await User({
-    fullname,
-    email,
-    password,
+  const user = await Customer({
+    name,
+    roll_number,
+    hostel,
+    phone_number,
+    email
   });
   await user.save();
   res.json({ success: true, user });
-}
+};
 
-export async function userSignIn(req, res) {
+exports.userSignIn = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await findOne({ email });
+  const user = await Customer.findOne({ email });
 
   if (!user)
     return res.json({
       success: false,
-      message: 'user not found, with the given email!',
+      message: 'user not found, with the given phone number!',
     });
 
   const isMatch = await user.comparePassword(password);
@@ -37,7 +39,7 @@ export async function userSignIn(req, res) {
       message: 'email / password does not match!',
     });
 
-  const token = sign({ userId: user._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
     expiresIn: '1d',
   });
 
@@ -52,20 +54,20 @@ export async function userSignIn(req, res) {
     });
   }
 
-  await findByIdAndUpdate(user._id, {
+  await Shop.findByIdAndUpdate(user._id, {
     tokens: [...oldTokens, { token, signedAt: Date.now().toString() }],
   });
 
   const userInfo = {
-    fullname: user.fullname,
-    email: user.email,
-    avatar: user.avatar ? user.avatar : '',
+    name: user.name,
+    phone_number: user.phone_number,
+   // avatar: user.avatar ? user.avatar : '',
   };
 
   res.json({ success: true, user: userInfo, token });
-}
+};
 
-export async function signOut(req, res) {
+exports.signOut = async (req, res) => {
   if (req.headers && req.headers.authorization) {
     const token = req.headers.authorization.split(' ')[1];
     if (!token) {
@@ -78,7 +80,7 @@ export async function signOut(req, res) {
 
     const newTokens = tokens.filter(t => t.token !== token);
 
-    await findByIdAndUpdate(req.user._id, { tokens: newTokens });
+    await User.findByIdAndUpdate(req.user._id, { tokens: newTokens });
     res.json({ success: true, message: 'Sign out successfully!' });
   }
-}
+};

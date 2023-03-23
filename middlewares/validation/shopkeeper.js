@@ -1,7 +1,7 @@
 import { check, validationResult } from 'express-validator';
 
 export const validateShopkeeperSignUp = [
-  check('fullname')
+  check('name')
     .trim()
     .not()
     .isEmpty()
