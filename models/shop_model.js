@@ -31,14 +31,14 @@ shopSchema.methods.comparePassword = async function (password) {
 };
 
 shopSchema.statics.isThisPhonenoInUse = async function (phone_number) {
-  if (!email) throw new Error('Invalid Email');
+  if (!phone_number) throw new Error('Invalid Phone Number');
   try {
     const user = await this.findOne({ phone_number });
     if (user) return false;
 
     return true;
   } catch (error) {
-    console.log('error inside isThisEmailInUse method', error.message);
+    console.log('error inside isThisPhonenoInUse method', error.message);
     return false;
   }
 };
