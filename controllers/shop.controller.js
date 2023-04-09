@@ -3,23 +3,28 @@ import { Item } from "../models/order.model.js";
 
 import mongoose from "mongoose";
 
-mongoose
-  .connect(
-    "mongodb+srv://test:codZGPi3d4AWxyUj@cluster0.46ugves.mongodb.net/?retryWrites=true&w=majority"
-  )
-  .then(() => {
-    console.log("Connected to database");
-  })
-  .catch((error) => {
-    console.log("Connection failed", error);
-  });
-
 export const getShopById = async (req, res) => {
   const id = req.params.id;
-  const ShopDoc = await Shop.findOne({ _id: id });
-  console.log(ShopDoc);
+  const shopDoc = await Shop.findOne({ _id: id });
+  console.log(shopDoc);
   res.status(200).json({
     status: "success",
-    data: ShopDoc,
+    data: shopDoc,
   });
+};
+
+export const getAllShops = async (req, res) => {
+  try {
+    const shopDoc = await Shop.find({}).sort("-creation");
+
+    res.status(200).json({
+      status: "success",
+      data: shopDoc,
+    });
+  } catch (error) {
+    // console.log(error.message);
+    return res
+      .status(424)
+      .json({ status: "Failed", message: "Request failed" });
+  }
 };
