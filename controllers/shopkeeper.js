@@ -1,14 +1,13 @@
-const jwt = require('jsonwebtoken');
-const Shop = require('../models/shop_model');
+import { Jwt } from "jsonwebtoken";
+import Shop from "../models/shop.model.js";
 
-
-exports.createUser = async (req, res) => {
+export const createUser = async (req, res) => {
   const { name, phone_number, password } = req.body;
   const isNewUser = await Shop.isThisPhonenoInUse(phone_number);
   if (!isNewUser)
     return res.json({
       success: false,
-      message: 'This email is already in use, try sign-in',
+      message: "This email is already in use, try sign-in",
     });
   const user = await Shop({
     name,
@@ -19,7 +18,7 @@ exports.createUser = async (req, res) => {
   res.json({ success: true, user });
 };
 
-exports.userSignIn = async (req, res) => {
+export const userSignIn = async (req, res) => {
   const { phone_number, password } = req.body;
 
   const user = await Shop.findOne({ phone_number });
@@ -27,24 +26,24 @@ exports.userSignIn = async (req, res) => {
   if (!user)
     return res.json({
       success: false,
-      message: 'user not found, with the given phone number!',
+      message: "user not found, with the given phone number!",
     });
 
   const isMatch = await user.comparePassword(password);
   if (!isMatch)
     return res.json({
       success: false,
-      message: 'email / password does not match!',
+      message: "email / password does not match!",
     });
 
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-    expiresIn: '1d',
+    expiresIn: "1d",
   });
 
   let oldTokens = user.tokens || [];
 
   if (oldTokens.length) {
-    oldTokens = oldTokens.filter(t => {
+    oldTokens = oldTokens.filter((t) => {
       const timeDiff = (Date.now() - parseInt(t.signedAt)) / 1000;
       if (timeDiff < 86400) {
         return t;
@@ -59,26 +58,26 @@ exports.userSignIn = async (req, res) => {
   const userInfo = {
     name: user.name,
     phone_number: user.phone_number,
-   // avatar: user.avatar ? user.avatar : '',
+    // avatar: user.avatar ? user.avatar : '',
   };
 
   res.json({ success: true, user: userInfo, token });
 };
 
-exports.signOut = async (req, res) => {
+export const signOut = async (req, res) => {
   if (req.headers && req.headers.authorization) {
-    const token = req.headers.authorization.split(' ')[1];
+    const token = req.headers.authorization.split(" ")[1];
     if (!token) {
       return res
         .status(401)
-        .json({ success: false, message: 'Authorization fail!' });
+        .json({ success: false, message: "Authorization fail!" });
     }
 
     const tokens = req.user.tokens;
 
-    const newTokens = tokens.filter(t => t.token !== token);
+    const newTokens = tokens.filter((t) => t.token !== token);
 
     await User.findByIdAndUpdate(req.user._id, { tokens: newTokens });
-    res.json({ success: true, message: 'Sign out successfully!' });
+    res.json({ success: true, message: "Sign out successfully!" });
   }
 };

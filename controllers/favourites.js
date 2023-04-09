@@ -1,3 +1,6 @@
+import User from "../models/user.model.js";
 export const getFavourites = async (req, res) => {
-  res.json({ "sending favoutes": "fjodisjf" });
+  const userDoc = await User.findOne();
+
+  const userFavourites = User.res.json({ "sending favoutes": "fjodisjf" });
 };
