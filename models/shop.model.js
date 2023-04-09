@@ -16,9 +16,8 @@ const shopSchema = new Schema({
   bestSeller: [{ type: Schema.Types.ObjectId, ref: "Item" }],
 });
 
-
-shopSchema.pre('save', function (next) {
-  if (this.isModified('password')) {
+shopSchema.pre("save", function (next) {
+  if (this.isModified("password")) {
     bcrypt.hash(this.password, 8, (err, hash) => {
       if (err) return next(err);
 
@@ -29,29 +28,28 @@ shopSchema.pre('save', function (next) {
 });
 
 shopSchema.methods.comparePassword = async function (password) {
-  if (!password) throw new Error('Password is mission, can not compare!');
+  if (!password) throw new Error("Password is mission, can not compare!");
 
   try {
     const result = await bcrypt.compare(password, this.password);
     return result;
   } catch (error) {
-    console.log('Error while comparing password!', error.message);
+    console.log("Error while comparing password!", error.message);
   }
 };
 
 shopSchema.statics.isThisPhonenoInUse = async function (phone_number) {
-  if (!phone_number) throw new Error('Invalid Phone Number');
+  if (!phone_number) throw new Error("Invalid Phone Number");
   try {
     const user = await this.findOne({ phone_number });
     if (user) return false;
 
     return true;
   } catch (error) {
-    console.log('error inside isThisPhonenoInUse method', error.message);
+    console.log("error inside isThisPhonenoInUse method", error.message);
     return false;
   }
 };
 
-// module.exports = mongoose.model('Shop', shopSchema);
-
-export const Shop = new model("Shop", shopSchema);
+const Shop = model("Shop", ShopSchema);
+export default Shop;
