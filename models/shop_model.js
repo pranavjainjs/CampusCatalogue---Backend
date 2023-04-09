@@ -52,6 +52,6 @@ shopSchema.statics.isThisPhonenoInUse = async function (phone_number) {
   }
 };
 
-module.exports = mongoose.model('Shop', shopSchema);
+// module.exports = mongoose.model('Shop', shopSchema);
 
-//export const Shop = new model("Shop", ShopSchema);
+export const Shop = new model("Shop", shopSchema);
