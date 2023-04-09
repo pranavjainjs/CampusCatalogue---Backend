@@ -1,7 +1,10 @@
-import connectDatabase from "./services/connectDB.js";
-
-connectDatabase();
 import express from "express";
+import connectDatabase from "./services/connectDB.js";
+connectDatabase();
+
+import favourites from "./routes/favourites.routes.js";
+// import customerauth from "./routes/customerauth.routes.js";
+
 const app = express();
 const port = 8080;
 
