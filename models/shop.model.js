@@ -51,5 +51,5 @@ shopSchema.statics.isThisPhonenoInUse = async function (phone_number) {
   }
 };
 
-const Shop = model("Shop", ShopSchema);
+const Shop = model("Shop", shopSchema);
 export default Shop;
