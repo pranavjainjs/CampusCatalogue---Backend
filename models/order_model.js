@@ -12,5 +12,6 @@ const ItemSchema = new Schema({
   price: { type: Number, required: true },
   rating: { type: Number, required: true },
   shopId: { type: Schema.Types.ObjectId, ref: "Shop" },
+  veg: { type: Boolean, required: true },
 });
 export const Item = new model("Item", ItemSchema);

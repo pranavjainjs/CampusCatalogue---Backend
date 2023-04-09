@@ -6,6 +6,9 @@ const customerSchema = new Schema({
   hostel: { type: String },
   phone_number: { type: Number, require: true },
   email: { type: String },
+  favourites_item: [{ type: Schema.Types.ObjectId, ref: "Item" }],
+  orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
+  favourites_shop: [{ type: Schema.Types.ObjectId, ref: "Shop" }],
 });
 //export const Customer = new model("Customer", CustomerSchema);
 

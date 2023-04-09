@@ -5,6 +5,15 @@ const shopSchema = new Schema({
   rating: { type: Number },
   coordinates: { latitude: { type: String }, longitude: { type: String } },
   isOpened: { type: Boolean, required: true },
+  menu: [{ type: Schema.Types.ObjectId, ref: "Item" }],
+  reviews: [
+    {
+      customerName: { type: String },
+      reviewText: { type: String },
+      reviewRating: { type: String },
+    },
+  ],
+  bestSeller: [{ type: Schema.Types.ObjectId, ref: "Item" }],
 });
 
 
