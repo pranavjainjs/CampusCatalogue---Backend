@@ -1,72 +1,93 @@
-const jwt = require("jsonwebtoken");
-import User from "../models/user.model";
+// const jwt = require("jsonwebtoken");
+// import User from "../models/user.model";
+import env from "dotenv";
+env.config();
+import { logInUser, registerUser, verifyOTP } from "../services/cognitoPool.js";
 
+let user;
 export const createUser = async (req, res) => {
-  const { name, roll_number, hostel, phone_number, email } = req.body;
-  const isNewUser = await User.isThisPhonenoInUse(phone_number);
-  if (!isNewUser)
-    return res.json({
-      success: false,
-      message: "This email is already in use, try sign-in",
-    });
-  const user = await User({
-    name,
-    roll_number,
-    hostel,
-    phone_number,
+  const { fullname, email, password } = req.body;
+  user = {
+    fullname,
     email,
-  });
-  await user.save();
-  res.json({ success: true, user });
+    password,
+  };
+  try {
+    await registerUser(email, password);
+    res.json({ success: true, userInfo: user });
+  } catch (err) {
+    res.json({ success: false, message: `${err.code}` });
+  }
 };
 
-exports.userSignIn = async (req, res) => {
+export const verifyCode = async (req, res) => {
+  const { email, otp } = req.body;
+  try {
+    await verifyOTP(email, otp);
+    res.json({ success: true, message: "OTP Verified Successfully" });
+  } catch (err) {
+    res.json({ success: false, message: `${err.code}` });
+  }
+};
+
+export const userSignIn = async (req, res) => {
   const { email, password } = req.body;
-
-  const user = await Customer.findOne({ email });
-
-  if (!user)
-    return res.json({
-      success: false,
-      message: "user not found, with the given phone number!",
+  try {
+    const result = await logInUser(email, password);
+    res.json({
+      success: true,
+      access_token: result.getAccessToken().getJwtToken(),
+      id_token: result.getIdToken().getJwtToken(),
+      refresh_token: result.getRefreshToken().getToken(),
     });
-
-  const isMatch = await user.comparePassword(password);
-  if (!isMatch)
-    return res.json({
-      success: false,
-      message: "email / password does not match!",
-    });
-
-  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
-  });
-
-  let oldTokens = user.tokens || [];
-
-  if (oldTokens.length) {
-    oldTokens = oldTokens.filter((t) => {
-      const timeDiff = (Date.now() - parseInt(t.signedAt)) / 1000;
-      if (timeDiff < 86400) {
-        return t;
-      }
-    });
+  } catch (err) {
+    res.json({ success: false, message: `${err.code}` });
   }
 
-  await Shop.findByIdAndUpdate(user._id, {
-    tokens: [...oldTokens, { token, signedAt: Date.now().toString() }],
-  });
+  // const user = await Customer.findOne({ email });
 
-  const userInfo = {
-    name: user.name,
-    phone_number: user.phone_number,
-    // avatar: user.avatar ? user.avatar : '',
-  };
+  // if (!user)
+  //   return res.json({
+  //     success: false,
+  //     message: "user not found, with the given phone number!",
+  //   });
 
-  res.json({ success: true, user: userInfo, token });
+  // const isMatch = await user.comparePassword(password);
+  // if (!isMatch)
+  //   return res.json({
+  //     success: false,
+  //     message: "email / password does not match!",
+  //   });
+
+  // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+  //   expiresIn: "1d",
+  // });
+
+  // let oldTokens = user.tokens || [];
+
+  // if (oldTokens.length) {
+  //   oldTokens = oldTokens.filter((t) => {
+  //     const timeDiff = (Date.now() - parseInt(t.signedAt)) / 1000;
+  //     if (timeDiff < 86400) {
+  //       return t;
+  //     }
+  //   });
+  // }
+
+  // await Shop.findByIdAndUpdate(user._id, {
+  //   tokens: [...oldTokens, { token, signedAt: Date.now().toString() }],
+  // });
+
+  // const userInfo = {
+  //   name: user.name,
+  //   phone_number: user.phone_number,
+  //   // avatar: user.avatar ? user.avatar : '',
+  // };
+
+  // res.json({ success: true, user: userInfo, token });
 };
 
-exports.signOut = async (req, res) => {
+export const signOut = async (req, res) => {
   if (req.headers && req.headers.authorization) {
     const token = req.headers.authorization.split(" ")[1];
     if (!token) {
