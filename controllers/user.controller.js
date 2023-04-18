@@ -2,7 +2,13 @@
 // import User from "../models/user.model";
 import env from "dotenv";
 env.config();
-import { logInUser, registerUser, verifyOTP } from "../services/cognitoPool.js";
+import {
+  logInUser,
+  registerUser,
+  verifyOTP,
+  verifyToken,
+  renewToken,
+} from "../services/cognitoPool.js";
 
 let user;
 export const createUser = async (req, res) => {
@@ -85,6 +91,42 @@ export const userSignIn = async (req, res) => {
   // };
 
   // res.json({ success: true, user: userInfo, token });
+};
+
+export const verifyJWT = async (req, res) => {
+  const bearerHeader = req.headers["authorization"];
+  let token;
+  if (bearerHeader) {
+    const bearer = bearerHeader.split(" ");
+    const bearerToken = bearer[1];
+    token = bearerToken.replace(/['"]+/g, "");
+  } else {
+    console.log("Empty Authorization Header");
+  }
+  try {
+    await verifyToken(token);
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false, errorMessage: err.message });
+  }
+};
+export const renewJWT = async (req, res) => {
+  const bearerHeader = req.headers["authorization"];
+  let token;
+  if (bearerHeader) {
+    const bearer = bearerHeader.split(" ");
+    const bearerToken = bearer[1];
+    token = bearerToken.replace(/['"]+/g, "");
+  } else {
+    console.log("Empty Authorization Header");
+  }
+  try {
+    const data = await renewToken(token);
+    res.json({ success: true, data });
+  } catch (err) {
+    console.log(err);
+    res.json({ success: false, errorMessage: err.message });
+  }
 };
 
 export const signOut = async (req, res) => {
