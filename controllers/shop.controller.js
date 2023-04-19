@@ -33,3 +33,26 @@ export const getAllShops = async (req, res) => {
       .json({ status: "Failed", message: "Request failed" });
   }
 };
+
+export const postShop = async (req, res) => {
+  try {
+    console.log(req);
+    var { name, phone_number } = req.body;
+    const shopDoc = await new Shop({
+      name,
+      phone_number,
+      // coordinates: { latitude: latitude, longitude: longitude },
+      isOpened: false,
+    }).save();
+
+    res.status(201).json({
+      status: "success",
+      data: "fdsfsd",
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(424)
+      .json({ status: "Failed", message: "Request failed" });
+  }
+};
