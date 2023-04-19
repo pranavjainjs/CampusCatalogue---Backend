@@ -20,6 +20,7 @@ const poolData = {
 const userPool = new CognitoUserPool(poolData);
 const pool_region = process.env.AWS_REGION;
 
+//for creating new user
 export const registerUser = (email, password) => {
   return new Promise((resolve, reject) => {
     var attributeList = [];
@@ -41,6 +42,7 @@ export const registerUser = (email, password) => {
     );
   });
 };
+//for verifying the otp
 export const verifyOTP = (email, otp) => {
   return new Promise((resolve, reject) => {
     const userData = {
@@ -57,6 +59,7 @@ export const verifyOTP = (email, otp) => {
     });
   });
 };
+//for logging in the user.It Will return all the tokens
 export const logInUser = (email, password) => {
   return new Promise((resolve, reject) => {
     var authenticationDetails = new AuthenticationDetails({
@@ -103,12 +106,14 @@ export const verifyToken = async (token) => {
           var decodedJwt = jwt.decode(token, { complete: true });
           if (!decodedJwt) {
             reject(new Error("JWT_TOKEN_INVALID"));
+            //not a jwt token
           }
 
           var kid = decodedJwt.header.kid;
           let pem2 = pems[`${kid}`];
           if (pem2 === null) {
             reject(new Error("INVALID_TOKEN"));
+            //jwt token recived is invalid
           }
 
           jwt.verify(
@@ -118,6 +123,7 @@ export const verifyToken = async (token) => {
             function (err, payload) {
               if (err) {
                 reject(new Error("JWT_EXPIRED"));
+                //jwt token got expired
               } else {
                 resolve(payload);
               }
@@ -125,6 +131,7 @@ export const verifyToken = async (token) => {
           );
         } else {
           reject(new Error("JWT_DOWNLOAD_FAILED"));
+          //unable to donwload jwt public json file
         }
       }
     );
@@ -146,6 +153,7 @@ export const renewToken = async (token) => {
           access_token: session.accessToken.jwtToken,
           id_token: session.idToken.jwtToken,
           refresh_token: session.refreshToken.token,
+          //refresh token will remain as it is
         };
         resolve(retObj);
       }
