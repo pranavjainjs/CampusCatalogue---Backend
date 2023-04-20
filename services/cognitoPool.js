@@ -108,7 +108,7 @@ export const verifyToken = async (token) => {
             reject(new Error("JWT_TOKEN_INVALID"));
             //not a jwt token
           }
-
+          // console.log(decodedJwt)
           var kid = decodedJwt.header.kid;
           let pem2 = pems[`${kid}`];
           if (pem2 === null) {

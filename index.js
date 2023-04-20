@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 connectDatabase();
 import { errorResponder, errorLogger } from "./utils/errorHandler.js";
 import shopRoutes from "./routes/shop.routes.js";
+import orderRoutes from "./routes/order.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import userAuthRoutes from "./routes/userauth.routes.js";
 import { isAuth } from "./middlewares/isAuth.js";
@@ -20,10 +21,13 @@ app.get("/", (req, res) => {
 app.use("/api/auth/user", userAuthRoutes);
 app.use("/api/user", isAuth, userRoutes);
 app.use("/api/shop", isAuth, shopRoutes);
+app.use("/api/order", isAuth, orderRoutes);
 
 //for error handling
 app.use(errorLogger);
 app.use(errorResponder);
+
+// , "192.168.1.15"
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`);

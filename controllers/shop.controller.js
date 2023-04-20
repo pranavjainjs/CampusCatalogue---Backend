@@ -1,7 +1,5 @@
 import Shop from "../models/shop.model.js";
-import { Item } from "../models/order.model.js";
 
-import mongoose from "mongoose";
 
 export const getShopById = async (req, res) => {
   try {
@@ -21,6 +19,7 @@ export const getShopById = async (req, res) => {
 
 export const getAllShops = async (req, res) => {
   try {
+    console.log(req); 
     const shopDoc = await Shop.find({}).sort("-creation");
     res.status(200).json({
       status: "success",
@@ -47,7 +46,7 @@ export const postShop = async (req, res) => {
 
     res.status(201).json({
       status: "success",
-      data: "fdsfsd",
+      data: shopDoc,
     });
   } catch (err) {
     console.log(err);
