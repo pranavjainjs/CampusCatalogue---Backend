@@ -9,7 +9,5 @@ const router = Router();
 router.post("/postShop", postShop);
 
 router.get("/allShops", getAllShops);
-router.get("/:id", getShopById);
-
 
 export default router;
