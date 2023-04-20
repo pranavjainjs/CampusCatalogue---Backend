@@ -7,6 +7,7 @@ import {
 const router = Router();
 
 router.post("/postShop", postShop);
+router.get("/getShopById", getShopById);
 
 router.get("/allShops", getAllShops);
 
