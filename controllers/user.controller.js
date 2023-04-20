@@ -10,6 +10,29 @@ import {
   renewToken,
 } from "../services/cognitoPool.js";
 
+// http://localhost:8080/api/user/addUser
+export const addUser = async (req, res) => {
+  console.log("siudsdhho")
+  try {
+    var { name, email } = req.body;
+    const userDoc = new Item({
+      name,
+      email,
+    });
+    await userDoc.save();
+
+    res.status(201).json({
+      status: "success",
+      data: userDoc,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(424)
+      .json({ status: "Failed", message: "Request failed" });
+  }
+};
+
 let user;
 export const createUser = async (req, res) => {
   const { fullname, email, password } = req.body;

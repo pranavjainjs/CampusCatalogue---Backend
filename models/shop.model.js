@@ -4,7 +4,7 @@ const shopSchema = new Schema({
   phone_number: { type: Number },
   rating: { type: Number },
   coordinates: { latitude: { type: String }, longitude: { type: String } },
-  isOpened: { type: Boolean, default: false, required: true },
+  isOpened: { type: Boolean },
   menu: [{ type: Schema.Types.ObjectId, ref: "Item" }],
   reviews: [
     {

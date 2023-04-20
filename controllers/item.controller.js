@@ -1,6 +1,5 @@
 import Item from "../models/item.model.js";
 
-
 // http://localhost:8080/api/item/getItemById?id=643294ad0463e80940048065
 export const getItemById = async (req, res) => {
   try {
@@ -35,16 +34,17 @@ export const getAllItems = async (req, res) => {
   }
 };
 
+// http://localhost:8080/api/item/postItem
 export const postItem = async (req, res) => {
   try {
-    console.log(req);
-    var { name, phone_number } = req.body;
-    const itemDoc = await new Item({
+    var { name, price, rating, veg } = req.body;
+    const itemDoc = new Item({
       name,
-      phone_number,
-      // coordinates: { latitude: latitude, longitude: longitude },
-      isOpened: false,
-    }).save();
+      price,
+      rating,
+      veg,
+    });
+    await itemDoc.save();
 
     res.status(201).json({
       status: "success",

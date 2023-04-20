@@ -35,35 +35,26 @@ export const getAllShops = async (req, res) => {
   }
 };
 
-export const postShop = (req, res, next) => {
-  // const body = req.body;
+export const postShop = async (req, res, next) => {
+  try {
+    var { name, phone_number } = req.body;
+    console.log(name, phone_number)
+    const doc = new Shop({
+      name,
+      phone_number,
+    })
+    console.log(doc);
 
-  // if (body.content === undefined) {
-  //   return response.status(400).json({ error: "content missing" });
-  // }
-
-  var { name, phone_number } = req.body;
-  console.log(name, phone_number);
-
-  const doc = new Shop({
-    name,
-    phone_number,
-    isOpened: req.body.isOpened || false,
-  });
-
-  doc.save().then((savedDoc) => {
-    res.json(savedDoc);
-  });
-  // console.log(doc);
-  // res.status(201).json({
-  //   status: "success",
-  //   data: doc,
-  // });
+   const response = await doc.save();
+   console.log(response)
+    res.json({
+      status: "success",
+      data: doc,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(424)
+      .json({ status: "Failed", message: "Request failed" });
+  }
 };
-//   catch (err) {
-//     console.log(err);
-//     return res
-//       .status(424)
-//       .json({ status: "Failed", message: "Request failed" });
-//   }
-// };

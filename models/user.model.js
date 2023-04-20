@@ -2,15 +2,14 @@ import mongoose, { model, mongo, Schema } from "mongoose";
 
 const userSchema = new Schema({
   name: { type: String, require: true },
-  roll_number: { type: Number },
-  hostel: { type: String },
-  phone_number: { type: Number, require: true },
-  email: { type: String },
+  email: { type: String, require: true },
   favourites_item: [{ type: Schema.Types.ObjectId, ref: "Item" }],
   orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
   favourites_shop: [{ type: Schema.Types.ObjectId, ref: "Shop" }],
+  // roll_number: { type: Number },
+  // hostel: { type: String },
+  // phone_number: { type: Number, require: true },
 });
-//export const Customer = new model("Customer", CustomerSchema);
 
 userSchema.pre("save", function (next) {
   if (this.isModified("password")) {
@@ -47,6 +46,5 @@ userSchema.statics.emailInUse = async function (email) {
   }
 };
 
-// module.exports = mongoose.model('Customer', customerSchema);
 const User = model("User", userSchema);
 export default User;
