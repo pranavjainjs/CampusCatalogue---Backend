@@ -6,9 +6,16 @@ import {
 } from "../controllers/shop.controller.js";
 const router = Router();
 
-router.post("/postShop", postShop);
+// get requests
+router.get("/", (req, res) => {
+  res.send("hello world");
+});
+router.get("/allShops", getAllShops);
 router.get("/getShopById", getShopById);
 
-router.get("/allShops", getAllShops);
+
+// post requests
+router.post("/postShop", postShop);
+
 
 export default router;

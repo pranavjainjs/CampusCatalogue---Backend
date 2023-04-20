@@ -7,13 +7,5 @@ const OrderSchema = new Schema({
   items: [{ type: Schema.Types.ObjectId, ref: "Item" }],
   total_price: { type: Number, required: true },
 });
-export const Order = new model("Order", OrderSchema);
-
-const ItemSchema = new Schema({
-  name: { type: String, required: true },
-  price: { type: Number, required: true },
-  rating: { type: Number, required: true },
-  shopId: { type: Schema.Types.ObjectId, ref: "Shop" },
-  veg: { type: Boolean, required: true },
-});
-export const Item = new model("Item", ItemSchema);
+const Order = new model("Order", OrderSchema);
+export default Order;
