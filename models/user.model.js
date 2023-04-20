@@ -9,7 +9,6 @@ const userSchema = new Schema({
   favourites_item: [{ type: Schema.Types.ObjectId, ref: "Item" }],
   orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
   favourites_shop: [{ type: Schema.Types.ObjectId, ref: "Shop" }],
-  prev_orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
 });
 //export const Customer = new model("Customer", CustomerSchema);
 
