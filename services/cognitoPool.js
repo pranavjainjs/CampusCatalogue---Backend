@@ -34,7 +34,7 @@ export const registerUser = (email, password) => {
       null,
       function (err, result) {
         if (err) {
-          reject(err);
+          return reject(err);
         } else {
           resolve(result);
         }
@@ -52,7 +52,7 @@ export const verifyOTP = (email, otp) => {
     const cognitoUser = new CognitoUser(userData);
     cognitoUser.confirmRegistration(otp, true, (err, result) => {
       if (err) {
-        reject(err);
+        return reject(err);
       } else {
         resolve(result);
       }
@@ -76,13 +76,20 @@ export const logInUser = (email, password) => {
         resolve(result);
       },
       onFailure: function (err) {
-        reject(err);
+        return reject(err);
       },
     });
   });
 };
 export const verifyToken = async (token) => {
   return new Promise((resolve, reject) => {
+    // console.log(token);
+    // if (token === undefined) {
+    //   const error = new Error("TOKEN_MISSING");
+    //   error.code = 401;
+    //   reject(error);
+    //   return;
+    // }
     request(
       {
         url: `https://cognito-idp.${pool_region}.amazonaws.com/${poolData.UserPoolId}/.well-known/jwks.json`,
@@ -104,15 +111,15 @@ export const verifyToken = async (token) => {
           }
           //validate the token
           var decodedJwt = jwt.decode(token, { complete: true });
-          if (!decodedJwt) {
-            reject(new Error("JWT_TOKEN_INVALID"));
+          if (decodedJwt === null) {
+            return reject(new Error("JWT_TOKEN_INVALID"));
             //not a jwt token
           }
           // console.log(decodedJwt)
           var kid = decodedJwt.header.kid;
           let pem2 = pems[`${kid}`];
           if (pem2 === null) {
-            reject(new Error("INVALID_TOKEN"));
+            return reject(new Error("INVALID_TOKEN"));
             //jwt token recived is invalid
           }
 
@@ -122,7 +129,7 @@ export const verifyToken = async (token) => {
             { algorithms: ["RS256"] },
             function (err, payload) {
               if (err) {
-                reject(new Error("JWT_EXPIRED"));
+                return reject(new Error("JWT_EXPIRED"));
                 //jwt token got expired
               } else {
                 resolve(payload);
@@ -130,7 +137,7 @@ export const verifyToken = async (token) => {
             }
           );
         } else {
-          reject(new Error("JWT_DOWNLOAD_FAILED"));
+          return reject(new Error("JWT_DOWNLOAD_FAILED"));
           //unable to donwload jwt public json file
         }
       }
@@ -147,7 +154,7 @@ export const renewToken = async (token) => {
     const cognitoUser = new CognitoUser(userData);
     cognitoUser.refreshSession(RefreshToken, (err, session) => {
       if (err) {
-        reject(err);
+        return reject(err);
       } else {
         let retObj = {
           access_token: session.accessToken.jwtToken,

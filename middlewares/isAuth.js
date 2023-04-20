@@ -7,12 +7,16 @@ export async function isAuth(req, res, next) {
     const bearerToken = bearer[1];
     token = bearerToken.replace(/['"]+/g, "");
   } else {
-    next(new Error({ message: "AUTHORIZATION_TOKEN_MISSING", status: 403 }));
+    const error = new Error("AUTHORIZATION_TOKEN_MISSING");
+    error.code = 403;
+    return next(error);
   }
   try {
     await verifyToken(token);
     next();
   } catch (err) {
-    next(new Error({ message: "UNAUTHORIZED_ACCESS", status: 401 }));
+    const error = new Error(err.message);
+    error.code = 401;
+    next(error);
   }
 }
