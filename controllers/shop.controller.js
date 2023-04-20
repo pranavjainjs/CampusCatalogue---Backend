@@ -42,7 +42,6 @@ export const postShop = async (req, res, next) => {
       name,
       phone_number,
     });
-    console.log(doc);
 
     const response = await doc.save();
     console.log(response);
@@ -51,6 +50,7 @@ export const postShop = async (req, res, next) => {
       data: doc,
     });
   } catch (err) {
+    console.log("lf");
     console.log(err);
     return res
       .status(424)
