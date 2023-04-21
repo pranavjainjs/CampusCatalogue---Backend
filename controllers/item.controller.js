@@ -10,7 +10,7 @@ export const getItemById = async (req, res) => {
       data: itemDoc,
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return res
       .status(424)
       .json({ status: "Failed", message: "Request failed" });
@@ -27,7 +27,7 @@ export const getAllItems = async (req, res) => {
       data: itemDoc,
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return res
       .status(424)
       .json({ status: "Failed", message: "Request failed" });
@@ -57,4 +57,3 @@ export const postItem = async (req, res) => {
       .json({ status: "Failed", message: "Request failed" });
   }
 };
-
