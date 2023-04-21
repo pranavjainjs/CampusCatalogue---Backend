@@ -11,6 +11,24 @@ import {
 } from "../services/cognitoPool.js";
 import User from "../models/user.model.js";
 
+export const getFavouriteShops = async (req, res) => {
+  try {
+    const userId = req.query.id;
+    const userDoc = await User.findOne({ _id: userId }).populate(
+      "favourites_shop"
+    );
+    res.status(201).json({
+      status: "success",
+      data: userDoc.favourites_shop,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(424)
+      .json({ status: "Failed", message: "Request failed" });
+  }
+};
+
 // http://localhost:8080/api/user/addUser
 export const addUser = async (req, res) => {
   try {
@@ -96,48 +114,6 @@ export const userSignIn = async (req, res) => {
   } catch (err) {
     res.json({ success: false, message: `${err.code}` });
   }
-
-  // const user = await Customer.findOne({ email });
-
-  // if (!user)
-  //   return res.json({
-  //     success: false,
-  //     message: "user not found, with the given phone number!",
-  //   });
-
-  // const isMatch = await user.comparePassword(password);
-  // if (!isMatch)
-  //   return res.json({
-  //     success: false,
-  //     message: "email / password does not match!",
-  //   });
-
-  // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-  //   expiresIn: "1d",
-  // });
-
-  // let oldTokens = user.tokens || [];
-
-  // if (oldTokens.length) {
-  //   oldTokens = oldTokens.filter((t) => {
-  //     const timeDiff = (Date.now() - parseInt(t.signedAt)) / 1000;
-  //     if (timeDiff < 86400) {
-  //       return t;
-  //     }
-  //   });
-  // }
-
-  // await Shop.findByIdAndUpdate(user._id, {
-  //   tokens: [...oldTokens, { token, signedAt: Date.now().toString() }],
-  // });
-
-  // const userInfo = {
-  //   name: user.name,
-  //   phone_number: user.phone_number,
-  //   // avatar: user.avatar ? user.avatar : '',
-  // };
-
-  // res.json({ success: true, user: userInfo, token });
 };
 
 export const verifyJWT = async (req, res) => {
