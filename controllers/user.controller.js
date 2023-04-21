@@ -11,6 +11,7 @@ import {
 } from "../services/cognitoPool.js";
 import User from "../models/user.model.js";
 
+// http://localhost:8080/api/user/getFavouriteShops?userId=644190b6c4b806199ba92bd5
 export const getFavouriteShops = async (req, res) => {
   try {
     const userId = req.query.id;
@@ -19,7 +20,7 @@ export const getFavouriteShops = async (req, res) => {
     );
     res.status(201).json({
       status: "success",
-      data: userDoc.favourites_shop,
+      data: userDoc?.favourites_shop || "NOT_FOUND", // NOT_FOUND when the user has not added any shops to favourite
     });
   } catch (err) {
     console.log(err);
@@ -59,7 +60,7 @@ export const getFavouritesItems = async (req, res) => {
     const userDoc = await User.findOne({ _id: userId }).populate("favourites_item");
     res.status(200).json({
       status: "success",
-      data: userDoc.favourites_item,
+      data: userDoc?.favourites_item || "NOT_FOUND", // NOT_FOUND when the user has not added any item to favourite
     });
   } catch (error) {
     console.log(error.message);
@@ -109,7 +110,6 @@ export const userSignIn = async (req, res) => {
       access_token: result.getAccessToken().getJwtToken(),
       id_token: result.getIdToken().getJwtToken(),
       refresh_token: result.getRefreshToken().getToken(),
-      g,
     });
   } catch (err) {
     res.json({ success: false, message: `${err.code}` });

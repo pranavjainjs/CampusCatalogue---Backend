@@ -6,6 +6,8 @@ const OrderSchema = new Schema({
   items_name: [{ type: String, required: true }],
   items: [{ type: Schema.Types.ObjectId, ref: "Item" }],
   total_price: { type: Number, required: true },
+  approved_status: { type: Boolean, required: true },
+  payment_status: { type: Boolean, required: true },
 });
 const Order = new model("Order", OrderSchema);
 export default Order;

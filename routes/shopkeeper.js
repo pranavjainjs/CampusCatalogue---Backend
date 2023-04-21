@@ -1,6 +1,4 @@
 import { Router } from "express";
-
-const router = Router();
 import {
   createUser,
   userSignIn,
@@ -14,6 +12,9 @@ import {
   validateUserSignIn,
 } from "../middlewares/validation/shopkeeper";
 
+const router = Router();
+
+// post requests
 router.post("/create-user", validateUserSignUp, userVlidation, createUser);
 router.post("/sign-in", validateUserSignIn, userVlidation, userSignIn);
 router.post("/sign-out", isAuth, signOut);

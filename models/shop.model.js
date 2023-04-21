@@ -15,6 +15,8 @@ const shopSchema = new Schema({
   ],
   bestSeller: [{ type: Schema.Types.ObjectId, ref: "Item" }],
   orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
+  isFood: { type: Number },
+  category: { type: Number, min: 1, max: 4 },
 });
 
 // shopSchema.pre("save", function (next) {

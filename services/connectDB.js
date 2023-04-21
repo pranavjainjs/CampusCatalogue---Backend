@@ -4,7 +4,7 @@ import logger from "../utils/logger.js";
 
 const connectDatabase = () => {
   connect(config.mongoURI)
-    .then(() => logger.info("DB Connected"))
+    .then(() => logger.info("My DB Connected"))
     .catch((e) => logger.error(e.message));
 };
 

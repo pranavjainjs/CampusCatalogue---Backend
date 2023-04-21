@@ -5,6 +5,7 @@ import {
   getAllShopItems,
   getShopById,
 } from "../controllers/shop.controller.js";
+
 const router = Router();
 
 // get requests

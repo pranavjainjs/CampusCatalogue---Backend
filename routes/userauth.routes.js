@@ -1,11 +1,13 @@
 import { Router } from "express";
-const router = Router();
 import { createUser, userSignIn } from "../controllers/user.controller.js";
 import {
   verifyCode,
   verifyJWT,
   renewJWT,
 } from "../controllers/user.controller.js";
+
+const router = Router();
+
 // import { createUser, userSignIn, signOut } from "../controllers/user.js";
 // import { isAuth } from "../middlewares/auth.js";
 // import {
@@ -17,6 +19,8 @@ import {
 // router.post("/create-user", validateUserSignUp, userVlidation, createUser);
 // router.post("/sign-in", validateUserSignIn, userVlidation, userSignIn);
 // router.post("/sign-out", isAuth, signOut);
+
+// post requests
 router.post("/", createUser);
 router.post("/otp", verifyCode);
 router.post("/jwt", verifyJWT);
