@@ -20,7 +20,6 @@ export const getShopById = async (req, res) => {
 // id required
 export const getAllShopItems = async (req, res) => {
   try {
-    console.log(req);
     const shopId = req.query.id;
     const shopDoc = await Shop.findOne({ _id: shopId }).populate("menu");
     res.status(200).json({
@@ -39,7 +38,9 @@ export const getAllShopItems = async (req, res) => {
 export const getAllShops = async (req, res) => {
   try {
     console.log(req);
-    const shopDoc = await Shop.find({}).sort("-creation");
+    const shopDoc = await Shop.find({})
+      .sort("-creation")
+      .populate(["menu", "reviews", "bestSeller"]);
     res.status(200).json({
       status: "success",
       data: shopDoc,
