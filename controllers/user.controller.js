@@ -11,7 +11,7 @@ import {
 } from "../services/cognitoPool.js";
 import User from "../models/user.model.js";
 
-// http://localhost:8080/api/user/getFavouriteShops?userId=644190b6c4b806199ba92bd5
+// http://localhost:8080/api/user/getFavouriteShops?id=644190b6c4b806199ba92bd5
 export const getFavouriteShops = async (req, res) => {
   try {
     const userId = req.query.id;
