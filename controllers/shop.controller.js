@@ -52,6 +52,7 @@ export const getAllShops = async (req, res) => {
   }
 };
 
+// http://localhost:8080/api/shop/postShop
 export const postShop = async (req, res, next) => {
   try {
     var { name, phone_number } = req.body;

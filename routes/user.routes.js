@@ -1,8 +1,11 @@
 import { Router } from "express";
-import { getFavourites } from "../controllers/favourites.controller.js";
-import { addUser } from "../controllers/user.controller.js";
+import { addUser, getFavouritesItems } from "../controllers/user.controller.js";
 const router = Router();
 
-router.get("/getFavourite", getFavourites);
+// get requests
+router.get("/getFavouriteItems", getFavouritesItems);
+
+// post requests
 router.post("/addUser", addUser);
+
 export default router;

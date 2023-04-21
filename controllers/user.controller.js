@@ -34,6 +34,25 @@ export const addUser = async (req, res) => {
   }
 };
 
+// http://localhost:8080/api/user/getFavouriteItems?userId=644190b6c4b806199ba92bd5
+export const getFavouritesItems = async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    const userDoc = await User.findOne({ _id: userId }).populate("favourites_item");
+    res.status(200).json({
+      status: "success",
+      data: userDoc.favourites_item,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(424)
+      .json({ status: "Failed", message: "Request failed" });
+  }
+};
+
+// cognito apis
+
 let user;
 export const createUser = async (req, res) => {
   const { fullname, email, password } = req.body;
@@ -63,6 +82,7 @@ export const verifyCode = async (req, res) => {
 
 export const userSignIn = async (req, res) => {
   const { email, password } = req.body;
+  console.log(email, password);
 
   try {
     const result = await logInUser(email, password);
