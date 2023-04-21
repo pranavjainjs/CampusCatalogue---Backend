@@ -9,18 +9,19 @@ import {
   verifyToken,
   renewToken,
 } from "../services/cognitoPool.js";
+import User from "../models/user.model.js";
 
 // http://localhost:8080/api/user/addUser
 export const addUser = async (req, res) => {
-  console.log("siudsdhho")
   try {
     var { name, email } = req.body;
-    const userDoc = new Item({
+    console.log(name, email);
+    const userDoc = new User({
       name,
       email,
     });
-    await userDoc.save();
-
+    const data = await userDoc.save();
+    console.log(data);
     res.status(201).json({
       status: "success",
       data: userDoc,
@@ -53,6 +54,7 @@ export const verifyCode = async (req, res) => {
   const { email, otp } = req.body;
   try {
     await verifyOTP(email, otp);
+
     res.json({ success: true, message: "OTP Verified Successfully" });
   } catch (err) {
     res.json({ success: false, message: `${err.code}` });
@@ -61,6 +63,7 @@ export const verifyCode = async (req, res) => {
 
 export const userSignIn = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const result = await logInUser(email, password);
     res.json({
@@ -68,6 +71,7 @@ export const userSignIn = async (req, res) => {
       access_token: result.getAccessToken().getJwtToken(),
       id_token: result.getIdToken().getJwtToken(),
       refresh_token: result.getRefreshToken().getToken(),
+      g,
     });
   } catch (err) {
     res.json({ success: false, message: `${err.code}` });

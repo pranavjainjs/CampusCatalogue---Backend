@@ -16,6 +16,24 @@ export const getShopById = async (req, res) => {
       .json({ status: "Failed", message: "Request failed" });
   }
 };
+// http://localhost:8080/api/shop/getAllShopItems
+// id required
+export const getAllShopItems = async (req, res) => {
+  try {
+    console.log(req);
+    const shopId = req.query.id;
+    const shopDoc = await Shop.findOne({ _id: shopId }).populate("menu");
+    res.status(200).json({
+      status: "success",
+      data: shopDoc.menu,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(424)
+      .json({ status: "Failed", message: "Request failed" });
+  }
+};
 
 // http://localhost:8080/api/shop/allShops
 export const getAllShops = async (req, res) => {
@@ -37,7 +55,6 @@ export const getAllShops = async (req, res) => {
 export const postShop = async (req, res, next) => {
   try {
     var { name, phone_number } = req.body;
-    console.log(name, phone_number);
     const doc = new Shop({
       name,
       phone_number,
@@ -50,7 +67,6 @@ export const postShop = async (req, res, next) => {
       data: doc,
     });
   } catch (err) {
-    console.log("lf");
     console.log(err);
     return res
       .status(424)
