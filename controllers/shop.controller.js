@@ -10,7 +10,7 @@ export const getShopById = async (req, res) => {
       data: shopDoc,
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return res
       .status(424)
       .json({ status: "Failed", message: "Request failed" });
@@ -28,7 +28,7 @@ export const getAllShopItems = async (req, res) => {
       data: shopDoc.menu,
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return res
       .status(424)
       .json({ status: "Failed", message: "Request failed" });
@@ -45,7 +45,7 @@ export const getAllShops = async (req, res) => {
       data: shopDoc,
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return res
       .status(424)
       .json({ status: "Failed", message: "Request failed" });

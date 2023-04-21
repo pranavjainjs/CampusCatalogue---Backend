@@ -56,13 +56,15 @@ export const addUser = async (req, res) => {
 export const getFavouritesItems = async (req, res) => {
   try {
     const userId = req.query.userId;
-    const userDoc = await User.findOne({ _id: userId }).populate("favourites_item");
+    const userDoc = await User.findOne({ _id: userId }).populate(
+      "favourites_item"
+    );
     res.status(200).json({
       status: "success",
       data: userDoc.favourites_item,
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return res
       .status(424)
       .json({ status: "Failed", message: "Request failed" });
@@ -83,6 +85,7 @@ export const createUser = async (req, res) => {
     await registerUser(email, password);
     res.json({ success: true, userInfo: user });
   } catch (err) {
+    console.log(err);
     res.json({ success: false, message: `${err.code}` });
   }
 };
@@ -94,6 +97,7 @@ export const verifyCode = async (req, res) => {
 
     res.json({ success: true, message: "OTP Verified Successfully" });
   } catch (err) {
+    console.log(err);
     res.json({ success: false, message: `${err.code}` });
   }
 };
@@ -109,9 +113,9 @@ export const userSignIn = async (req, res) => {
       access_token: result.getAccessToken().getJwtToken(),
       id_token: result.getIdToken().getJwtToken(),
       refresh_token: result.getRefreshToken().getToken(),
-      g,
     });
   } catch (err) {
+    console.log(err);
     res.json({ success: false, message: `${err.code}` });
   }
 };
@@ -130,6 +134,7 @@ export const verifyJWT = async (req, res) => {
     await verifyToken(token);
     res.json({ success: true });
   } catch (err) {
+    console.log(err);
     res.json({ success: false, errorMessage: err.message });
   }
 };
@@ -149,23 +154,5 @@ export const renewJWT = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.json({ success: false, errorMessage: err.message });
-  }
-};
-
-export const signOut = async (req, res) => {
-  if (req.headers && req.headers.authorization) {
-    const token = req.headers.authorization.split(" ")[1];
-    if (!token) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Authorization fail!" });
-    }
-
-    const tokens = req.user.tokens;
-
-    const newTokens = tokens.filter((t) => t.token !== token);
-
-    await User.findByIdAndUpdate(req.user._id, { tokens: newTokens });
-    res.json({ success: true, message: "Sign out successfully!" });
   }
 };

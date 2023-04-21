@@ -5,6 +5,5 @@ import { getFavouriteShops } from "../controllers/user.controller.js";
 // post requests
 router.post("/addUser", addUser);
 router.get("/getFavouriteItems", getFavouritesItems);
-
 router.get("/getFavouriteShops", getFavouriteShops);
 export default router;
