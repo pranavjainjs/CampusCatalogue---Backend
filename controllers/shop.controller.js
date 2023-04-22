@@ -37,7 +37,6 @@ export const getAllShopItems = async (req, res) => {
 // http://localhost:8080/api/shop/allShops
 export const getAllShops = async (req, res) => {
   try {
-    console.log(req);
     const shopDoc = await Shop.find({})
       .sort("-creation")
       .populate(["menu", "reviews", "bestSeller"]);

@@ -20,7 +20,6 @@ export const getItemById = async (req, res) => {
 // http://localhost:8080/api/item/allItems
 export const getAllItems = async (req, res) => {
   try {
-    console.log(req);
     const itemDoc = await Item.find({}).sort("-creation");
     res.status(200).json({
       status: "success",

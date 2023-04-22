@@ -132,7 +132,8 @@ export const verifyJWT = async (req, res) => {
     console.log("Empty Authorization Header");
   }
   try {
-    await verifyToken(token);
+    const data = await verifyToken(token);
+    console.log(data);
     res.json({ success: true });
   } catch (err) {
     console.log(err);
