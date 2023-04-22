@@ -158,3 +158,22 @@ export const renewJWT = async (req, res) => {
     res.json({ success: false, errorMessage: err.message });
   }
 };
+export const getUser = async (req, res, next) => {
+  try {
+    const userId = "644190b6c4b806199ba92bd5";
+    const userDoc = await User.findOne({ _id: userId }).populate([
+      "favourites_item",
+      "orders",
+      "favourites_shop",
+    ]);
+    res.json({
+      status: "success",
+      data: userDoc,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(424)
+      .json({ status: "Failed", message: "Request failed" });
+  }
+};
