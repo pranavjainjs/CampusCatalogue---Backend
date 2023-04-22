@@ -10,9 +10,9 @@ const router = Router();
 
 // post requests
 router.post("/addUser", addUser);
-router.get("/getUser", getUser);
 
 // get requests
+router.get("/getUser", getUser);
 router.get("/getFavouriteItems", getFavouritesItems);
 router.get("/getUserInfo", getUserInfo);
 router.get("/getFavouriteShops", getFavouriteShops);
