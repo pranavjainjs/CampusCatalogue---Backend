@@ -11,6 +11,23 @@ import {
 } from "../services/cognitoPool.js";
 import User from "../models/user.model.js";
 
+// http://localhost:8080/api/user/getUserInfo?id=644190b6c4b806199ba92bd5
+export const getUserInfo = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const userDoc = await User.findOne({ _id: id });
+    res.status(200).json({
+      status: "success",
+      data: userDoc,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(424)
+      .json({ status: "Failed", message: "Request failed" });
+  }
+};
+
 // http://localhost:8080/api/user/getFavouriteShops?id=644190b6c4b806199ba92bd5
 export const getFavouriteShops = async (req, res) => {
   try {
@@ -71,6 +88,23 @@ export const getFavouritesItems = async (req, res) => {
       .json({ status: "Failed", message: "Request failed" });
   }
 };
+
+// // http://localhost:8080/api/user/getFavouriteItems?userId=644190b6c4b806199ba92bd5
+// exports.deleteFavouritesItems = async (req, res) => {
+//   try {
+//     const id = req.query.id;
+//     // const FavouritesItemsData = await GroupMembers.findById(id);
+//     const DeletedFavouritesItemData = await GroupMembers.findByIdAndDelete(id);
+//     return res
+//       .status(200)
+//       .json({ status: "success", data: { DeletedFavouritesItemData } });
+//   } catch (err) {
+//     console.log(err);
+//     return res
+//       .status(424)
+//       .json({ status: "Failed", message: "Request failed" });
+//   }
+// };
 
 // cognito apis
 
