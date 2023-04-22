@@ -44,10 +44,50 @@ const orders = {
   payment_status: false,
 };
 
-Order.insertMany(orders)
-  .then(() => {
-    console.log("Data inserted");
-  })
-  .catch((error) => {
+// Order.insertMany(orders)
+//   .then(() => {
+//     console.log("Data inserted");
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+export const getAllSOrders = async (req, res) => {
+  try {
+    const orderDoc = await Order.find({});
+    res.status(200).json({
+      status: "success",
+      data: orderDoc,
+    });
+    console.log(orderDoc)
+    orderDoc.forEach((element) => {
+      const shopId = element.shopId;
+      try {
+        const shopData = fetch(
+          `http://localhost:8080/api/shop/getShopById?id=${shopId}`
+        );
+        shopData.orders.push(element._id);
+        shopData
+          .save()
+          .then(() => {
+            console.log("done for 1 shop");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } catch (error) {
+        console.log(error);
+        return res
+          .status(424)
+          .json({ status: "Failed", message: "Request failed" });
+      }
+    });
+  } catch (error) {
     console.log(error);
-  });
+    return res
+      .status(424)
+      .json({ status: "Failed", message: "Request failed" });
+  }
+};
+
+// getAllSOrders();

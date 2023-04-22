@@ -26,7 +26,8 @@ export const getOrdersByUserId = async (req, res) => {
 // http://localhost:8080/api/order/getOrdersByShopId?id=643294ae0463e80940048069
 export const getOrdersByShopId = async (req, res) => {
   try {
-    const shopId = req.query.id;
+    // const shopId = req.query.id;
+    const shopId = "6442e27e11de60cbf12db456";
     const orderDoc = await Shop.findOne({ _id: shopId }).populate("orders");
     res.status(200).json({
       status: "success",
